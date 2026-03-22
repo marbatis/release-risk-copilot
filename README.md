@@ -1,6 +1,11 @@
 # Release Risk Copilot (MVP Foundation)
 
-This project is the first phase of a deterministic release decision-support system.
+Policy-first release risk assessment with deterministic rules, evidence retrieval, and AI-generated explanations.
+
+## Why this matters
+- Reduces false-GO risk by making hard-block checks explicit and deterministic.
+- Keeps humans in control of release decisions while improving preflight consistency.
+- Creates auditable release assessments that can be reviewed, tested, and iterated safely.
 
 Implemented in this phase:
 - scaffolding (FastAPI app + module layout)
