@@ -1,0 +1,39 @@
+{
+  "release_id": "REL-2026-0001",
+  "service": "billing-api",
+  "environment": "production",
+  "created_at": "2026-03-22T10:00:00Z",
+  "commit_sha": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b",
+  "change_freeze_active": false,
+  "rollback_plan_present": true,
+  "runbook_link_present": true,
+  "ci_status": "pass",
+  "approvals": 2,
+  "tests_passed": 128,
+  "tests_failed": 0,
+  "flaky_tests_7d": 0,
+  "diff_size": 210,
+  "dependencies": [
+    {"name": "postgres", "status": "healthy", "last_updated_at": "2026-03-22T09:45:00Z"},
+    {"name": "redis", "status": "healthy", "last_updated_at": "2026-03-22T09:44:00Z"}
+  ],
+  "recent_incidents": [
+    {
+      "incident_id": "INC-2026-0110",
+      "severity": "SEV3",
+      "status": "resolved",
+      "linked_service": "billing-api",
+      "started_at": "2026-03-14T03:20:00Z",
+      "ended_at": "2026-03-14T03:45:00Z"
+    }
+  ],
+  "ownership": {
+    "service": "billing-api",
+    "owning_team": "payments-platform",
+    "oncall_defined": true,
+    "last_reviewed_at": "2026-03-01T12:00:00Z"
+  },
+  "metadata": {
+    "change_ticket": "CHG-11823"
+  }
+}
