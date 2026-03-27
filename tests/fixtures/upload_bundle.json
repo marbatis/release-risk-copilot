@@ -1,0 +1,16 @@
+{
+  "release_id": "REL-2026-UPLD-01",
+  "service": "billing-api",
+  "environment": "production",
+  "created_at": "2026-03-27T12:00:00Z",
+  "commit_sha": "deadc0de1234abcd5678ef90123456789abcdeff",
+  "change_freeze_active": false,
+  "rollback_plan_present": true,
+  "runbook_link_present": true,
+  "ci_status": "pass",
+  "approvals": 2,
+  "tests_passed": 98,
+  "tests_failed": 0,
+  "flaky_tests_7d": 1,
+  "diff_size": 220
+}
