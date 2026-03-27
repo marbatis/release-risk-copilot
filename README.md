@@ -113,6 +113,25 @@ Key values:
 - `DATABASE_URL` (default SQLite local file)
 - `UPLOAD_MAX_BYTES` (JSON upload cap)
 
+## Rate limiting
+Assessment endpoints (`POST /assessments`, `POST /assessments/sample`) are rate-limited to 20 requests per minute per IP. All other endpoints have a default limit of 60 requests per minute.
+
+Exceeding the limit returns `429 Too Many Requests`.
+
+## Production database (Postgres)
+SQLite is the default for local development. For production, set `DATABASE_URL` to a Postgres connection string:
+
+```bash
+DATABASE_URL=postgresql://user:password@host:5432/release_risk
+```
+
+The SQLAlchemy ORM layer requires no code changes—the engine adapts automatically.
+You may need to install `psycopg2-binary` (or `psycopg2`) in your production environment:
+
+```bash
+pip install psycopg2-binary
+```
+
 ## Mock mode
 If `OPENAI_API_KEY` is not set:
 - app stays fully functional
@@ -157,7 +176,8 @@ Current suite covers:
 - mock mode when no OpenAI key is configured
 
 ## Roadmap
-- Add richer scenario generation in notebooks
+- ~~Add richer scenario generation in notebooks~~ (done)
 - Add richer evidence citation formatting in UI
 - Optional policy editing UI for demo use
 - Extend deterministic scoring explainability breakdown per weight
+- Webhook / CI integration for automated pre-release checks

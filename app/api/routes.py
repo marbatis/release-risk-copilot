@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Body, HTTPException, Path, Query
+from fastapi import APIRouter, Body, HTTPException, Path, Query, Request
 from pydantic import ValidationError
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from app.api.deps import (
     assessment_repo,
@@ -14,6 +16,7 @@ from app.api.deps import (
 from app.schemas.models import Assessment, AssessmentHistoryItem, DecisionLabel, ReleaseBundle
 
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 _default_sample_name = "go_clean_release"
 
 
@@ -32,7 +35,9 @@ def list_samples() -> dict[str, list[str]]:
 
 
 @router.post("/assessments", response_model=Assessment)
+@limiter.limit("20/minute")
 def assess_release(
+    request: Request,
     bundle: ReleaseBundle = Body(
         ...,
         openapi_examples={
@@ -116,7 +121,9 @@ def _assess_sample_name(sample_name: str) -> Assessment:
 
 
 @router.post("/assessments/sample", response_model=Assessment)
+@limiter.limit("20/minute")
 def assess_sample_default(
+    request: Request,
     sample_name: str = Query(
         default=_default_sample_name,
         description=(
@@ -132,7 +139,9 @@ def assess_sample_default(
 
 
 @router.post("/assessments/sample/{sample_name}", response_model=Assessment)
+@limiter.limit("20/minute")
 def assess_sample(
+    request: Request,
     sample_name: str = Path(
         ...,
         description="Sample fixture name. Use GET /samples to list valid names.",
