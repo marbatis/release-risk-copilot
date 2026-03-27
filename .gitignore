@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 .env
+
+# Local sqlite artifacts
+release_risk.db
+tests/test_release_risk.db

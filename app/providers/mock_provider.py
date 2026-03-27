@@ -36,12 +36,23 @@ class MockMemoProvider(MemoProvider):
             ]
 
         summary = f"Recommendation {decision.decision.value}. {decision.rationale}"
+        recommended_next_steps = [
+            "Review triggered warnings before release.",
+            "Confirm rollback readiness and on-call coverage.",
+        ]
+        if decision.decision.value == "GO":
+            recommended_next_steps = ["Proceed with standard release verification checks."]
 
         return RiskMemo(
             summary=summary,
+            executive_summary=summary,
+            decision_rationale=decision.rationale,
             top_risks=top_risks,
             missing_evidence=evaluation.missing_evidence,
+            missing_information=evaluation.missing_evidence,
             supporting_evidence=supporting_evidence,
+            rollback_notes=f"Rollback readiness: {evaluation.rollback_readiness}.",
+            recommended_next_steps=recommended_next_steps,
             recommendation=decision.decision,
             provider_name=self.name,
             deterministic=True,

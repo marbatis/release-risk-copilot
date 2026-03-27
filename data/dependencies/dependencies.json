@@ -1,0 +1,32 @@
+[
+  {
+    "service": "billing-api",
+    "environment": "production",
+    "signal": {"name": "postgres", "status": "healthy", "last_updated_at": "2026-03-22T09:45:00Z"}
+  },
+  {
+    "service": "billing-api",
+    "environment": "production",
+    "signal": {"name": "redis", "status": "healthy", "last_updated_at": "2026-03-22T09:44:00Z"}
+  },
+  {
+    "service": "checkout-api",
+    "environment": "production",
+    "signal": {"name": "card-gateway", "status": "degraded", "last_updated_at": "2026-03-22T10:08:00Z"}
+  },
+  {
+    "service": "checkout-api",
+    "environment": "production",
+    "signal": {"name": "customer-db", "status": "healthy", "last_updated_at": "2026-03-22T10:05:00Z"}
+  },
+  {
+    "service": "orders-api",
+    "environment": "production",
+    "signal": {"name": "inventory-db", "status": "down", "last_updated_at": "2026-03-22T10:18:00Z"}
+  },
+  {
+    "service": "orders-api",
+    "environment": "production",
+    "signal": {"name": "pricing-service", "status": "degraded", "last_updated_at": "2026-03-22T10:14:00Z"}
+  }
+]

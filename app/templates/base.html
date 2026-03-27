@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Release Risk Copilot{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">Release Risk Copilot</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/history">History</a>
+        <a href="/docs">API Docs</a>
+      </nav>
+    </header>
+    <main class="container">{% block content %}{% endblock %}</main>
+  </body>
+</html>

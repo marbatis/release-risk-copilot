@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Home | Release Risk Copilot{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Deterministic release decision support</h1>
+  <p>
+    Policy decides. Model explains. This tool is read-only and never performs production actions.
+  </p>
+</section>
+
+<section class="grid-two">
+  <article class="panel">
+    <h2>Run a Sample Bundle</h2>
+    <form method="post" action="/assessments/run-sample">
+      <label for="sample_name">Sample</label>
+      <select id="sample_name" name="sample_name">
+        {% for sample in samples %}
+        <option value="{{ sample }}" {% if sample == default_sample %}selected{% endif %}>{{ sample }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Run Assessment</button>
+    </form>
+  </article>
+
+  <article class="panel">
+    <h2>Upload Release Bundle JSON</h2>
+    <form method="post" action="/assessments/upload" enctype="multipart/form-data">
+      <label for="bundle_file">Release JSON file</label>
+      <input id="bundle_file" name="bundle_file" type="file" accept="application/json,.json" required />
+      <button type="submit">Upload and Assess</button>
+    </form>
+    <p class="note">Max upload size: 200KB. JSON object only.</p>
+  </article>
+</section>
+
+<section class="panel decision-key">
+  <h2>Decision Key</h2>
+  <ul>
+    <li><strong>GO</strong>: low risk, adequate evidence, no hard blocks</li>
+    <li><strong>CAUTION</strong>: moderate risk or limited evidence; release with safeguards</li>
+    <li><strong>HOLD</strong>: hard blocks or elevated deterministic risk threshold exceeded</li>
+  </ul>
+</section>
+{% endblock %}
