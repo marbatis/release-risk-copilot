@@ -1,0 +1,20 @@
+[
+  {
+    "service": "billing-api",
+    "owning_team": "payments-platform",
+    "oncall_defined": true,
+    "last_reviewed_at": "2026-03-01T12:00:00Z"
+  },
+  {
+    "service": "checkout-api",
+    "owning_team": "commerce-platform",
+    "oncall_defined": true,
+    "last_reviewed_at": "2026-03-10T12:30:00Z"
+  },
+  {
+    "service": "orders-api",
+    "owning_team": "order-fulfillment",
+    "oncall_defined": false,
+    "last_reviewed_at": "2026-02-20T08:00:00Z"
+  }
+]

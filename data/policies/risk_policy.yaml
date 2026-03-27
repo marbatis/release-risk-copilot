@@ -1,0 +1,14 @@
+policy_version: v1-portfolio
+thresholds:
+  caution_score_threshold: 35
+  hold_score_threshold: 95
+  go_min_coverage: 0.80
+  hold_min_coverage: 0.50
+coverage_categories:
+  - bundle_core
+  - dependency_health
+  - incidents
+  - ownership
+  - runbook
+  - rollback
+  - approvals_ci

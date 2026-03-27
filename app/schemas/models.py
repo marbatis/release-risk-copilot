@@ -58,6 +58,25 @@ class FindingLevel(str, Enum):
     RISK = "risk"
 
 
+class RuleSeverity(str, Enum):
+    """Human-readable severity level for rule checks."""
+
+    INFO = "info"
+    WARNING = "warning"
+    HARD_BLOCK = "hard_block"
+
+
+class EvidenceSourceType(str, Enum):
+    """Supported local evidence source categories."""
+
+    DEPENDENCY = "dependency"
+    INCIDENT = "incident"
+    OWNERSHIP = "ownership"
+    RUNBOOK = "runbook"
+    POLICY = "policy"
+    BUNDLE = "bundle"
+
+
 class ServiceOwnership(BaseModel):
     """Service owner and on-call metadata."""
 
@@ -95,7 +114,40 @@ class IncidentSignal(BaseModel):
 class ReleaseBundle(BaseModel):
     """Input payload for one release assessment."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "examples": [
+                {
+                    "release_id": "REL-2026-1001",
+                    "service": "billing-api",
+                    "environment": "production",
+                    "created_at": "2026-03-22T10:00:00Z",
+                    "commit_sha": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+                    "change_freeze_active": False,
+                    "rollback_plan_present": True,
+                    "runbook_link_present": True,
+                    "ci_status": "pass",
+                    "approvals": 2,
+                    "tests_passed": 120,
+                    "tests_failed": 0,
+                    "flaky_tests_7d": 1,
+                    "diff_size": 240,
+                    "dependencies": [
+                        {"name": "postgres", "status": "healthy"},
+                        {"name": "redis", "status": "healthy"},
+                    ],
+                    "recent_incidents": [],
+                    "ownership": {
+                        "service": "billing-api",
+                        "owning_team": "payments-platform",
+                        "oncall_defined": True,
+                    },
+                    "metadata": {"change_ticket": "CHG-12001"},
+                }
+            ]
+        },
+    )
 
     release_id: str = Field(min_length=1)
     service: str = Field(min_length=1)
@@ -142,6 +194,29 @@ class RuleFinding(BaseModel):
     weight: float = Field(default=0.0, ge=0.0)
 
 
+class RuleCheck(BaseModel):
+    """Detailed pass/fail record for one deterministic rule."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    rule_name: str = Field(min_length=1)
+    passed: bool
+    severity: RuleSeverity
+    message: str = Field(min_length=1)
+
+
+class RetrievedEvidence(BaseModel):
+    """Single retrieved local evidence record."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source_type: EvidenceSourceType
+    source_name: str = Field(min_length=1)
+    excerpt: str = Field(min_length=1)
+    relevance_score: float = Field(ge=0.0, le=1.0)
+    source_ref: Optional[str] = None
+
+
 class RulesEvaluation(BaseModel):
     """Aggregated output from the deterministic rules engine."""
 
@@ -149,10 +224,15 @@ class RulesEvaluation(BaseModel):
 
     hard_blocks: list[RuleFinding] = Field(default_factory=list)
     risk_flags: list[RuleFinding] = Field(default_factory=list)
+    rule_checks: list[RuleCheck] = Field(default_factory=list)
+    retrieved_evidence: list[RetrievedEvidence] = Field(default_factory=list)
     missing_evidence: list[str] = Field(default_factory=list)
     evidence_checks: list[str] = Field(default_factory=list)
+    coverage_by_category: dict[str, float] = Field(default_factory=dict)
     risk_score: float = Field(default=0.0, ge=0.0)
     evidence_coverage: float = Field(default=0.0, ge=0.0, le=1.0)
+    rollback_readiness: str = "unknown"
+    coverage_downgrade_reason: Optional[str] = None
 
 
 class PolicyConfig(BaseModel):
@@ -176,6 +256,8 @@ class PolicyDecision(BaseModel):
     rationale: str = Field(min_length=1)
     triggered_conditions: list[str] = Field(default_factory=list)
     policy_version: str = Field(default="mvp-v1")
+    downgraded_for_coverage: bool = False
+    base_decision: Optional[DecisionLabel] = None
 
 
 class RiskMemo(BaseModel):
@@ -184,9 +266,14 @@ class RiskMemo(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     summary: str = Field(min_length=1)
+    executive_summary: Optional[str] = None
+    decision_rationale: Optional[str] = None
     top_risks: list[str] = Field(default_factory=list)
     missing_evidence: list[str] = Field(default_factory=list)
+    missing_information: list[str] = Field(default_factory=list)
     supporting_evidence: list[str] = Field(default_factory=list)
+    rollback_notes: Optional[str] = None
+    recommended_next_steps: list[str] = Field(default_factory=list)
     recommendation: DecisionLabel
     provider_name: str = Field(min_length=1)
     deterministic: bool = True
@@ -203,3 +290,19 @@ class Assessment(BaseModel):
     rules: RulesEvaluation
     decision: PolicyDecision
     memo: RiskMemo
+    retrieved_evidence: list[RetrievedEvidence] = Field(default_factory=list)
+
+
+class AssessmentHistoryItem(BaseModel):
+    """Lightweight assessment summary for history views."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    assessment_id: str
+    release_id: str
+    service: str
+    environment: str
+    created_at: datetime
+    evaluated_at: datetime
+    decision: DecisionLabel
+    risk_score: float
