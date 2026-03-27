@@ -1,6 +1,12 @@
 # Release Risk Copilot (v1 Demo)
 
 Release Risk Copilot is a deterministic, read-only release decision support tool.
+Policy-first release risk assessment with deterministic rules, evidence retrieval, and AI-generated explanations.
+
+## Why this matters
+- Reduces false-GO risk by making hard-block checks explicit and deterministic.
+- Keeps humans in control of release decisions while improving preflight consistency.
+- Creates auditable release assessments that can be reviewed, tested, and iterated safely.
 
 It evaluates a release bundle and returns:
 - final decision: `GO` / `CAUTION` / `HOLD`
