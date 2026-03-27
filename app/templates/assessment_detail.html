@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Assessment {{ assessment.assessment_id }}{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="detail-header">
+    <h1>{{ assessment.bundle.service }} / {{ assessment.bundle.environment }}</h1>
+    <span class="badge badge-{{ decision|lower }}">{{ decision }}</span>
+  </div>
+  <p class="note">Assessment ID: {{ assessment.assessment_id }}</p>
+</section>
+
+<section class="panel">
+  <h2>Risk Score</h2>
+  <div class="score-track">
+    <div class="score-fill" style="width: {{ risk_percent }}%;"></div>
+  </div>
+  <p>{{ "%.1f"|format(assessment.rules.risk_score) }} / 100</p>
+  <p class="note">Rollback readiness: {{ assessment.rules.rollback_readiness }}</p>
+  {% if assessment.rules.coverage_downgrade_reason %}
+  <p class="warn">Coverage downgrade: {{ assessment.rules.coverage_downgrade_reason }}</p>
+  {% endif %}
+</section>
+
+<section class="grid-two">
+  <article class="panel">
+    <h2>Hard Blocks</h2>
+    <ul>
+      {% for block in assessment.rules.hard_blocks %}
+      <li><strong>{{ block.rule_id }}</strong>: {{ block.message }}</li>
+      {% else %}
+      <li>No hard blocks.</li>
+      {% endfor %}
+    </ul>
+  </article>
+
+  <article class="panel">
+    <h2>Missing Evidence</h2>
+    <ul>
+      {% for item in assessment.rules.missing_evidence %}
+      <li>{{ item }}</li>
+      {% else %}
+      <li>No missing evidence fields.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="panel">
+  <h2>Rule Checks</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rule</th>
+          <th>Passed</th>
+          <th>Severity</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for check in assessment.rules.rule_checks %}
+        <tr>
+          <td>{{ check.rule_name }}</td>
+          <td>{{ check.passed }}</td>
+          <td>{{ check.severity }}</td>
+          <td>{{ check.message }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Retrieved Evidence</h2>
+  <ul>
+    {% for evidence in assessment.retrieved_evidence %}
+    <li>
+      <strong>[{{ evidence.source_type }}] {{ evidence.source_name }}</strong>
+      <div>{{ evidence.excerpt }}</div>
+      <div class="note">score={{ "%.2f"|format(evidence.relevance_score) }} ref={{ evidence.source_ref }}</div>
+    </li>
+    {% else %}
+    <li>No retrieved evidence.</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="panel">
+  <h2>Grounded Memo</h2>
+  <p><strong>Summary:</strong> {{ assessment.memo.summary }}</p>
+  <p><strong>Rationale:</strong> {{ assessment.memo.decision_rationale or assessment.decision.rationale }}</p>
+  <p><strong>Top Risks:</strong></p>
+  <ul>
+    {% for risk in assessment.memo.top_risks %}
+    <li>{{ risk }}</li>
+    {% else %}
+    <li>No elevated risks.</li>
+    {% endfor %}
+  </ul>
+  <p><strong>Recommended next steps:</strong></p>
+  <ul>
+    {% for step in assessment.memo.recommended_next_steps %}
+    <li>{{ step }}</li>
+    {% else %}
+    <li>Proceed with normal release verification.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

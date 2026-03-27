@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}History | Release Risk Copilot{% endblock %}
+{% block content %}
+<section class="panel">
+  <h1>Assessment History</h1>
+  <p class="note">Sort by <a href="/history?sort=evaluated_at&order=desc">newest</a>, <a href="/history?sort=risk_score&order=desc">risk</a>, <a href="/history?sort=service&order=asc">service</a>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Assessment</th>
+          <th>Service</th>
+          <th>Env</th>
+          <th>Decision</th>
+          <th>Risk Score</th>
+          <th>Evaluated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td><a href="/assessments/{{ row.assessment_id }}">{{ row.assessment_id }}</a></td>
+          <td>{{ row.service }}</td>
+          <td>{{ row.environment }}</td>
+          <td>{{ row.decision }}</td>
+          <td>{{ "%.1f"|format(row.risk_score) }}</td>
+          <td>{{ row.evaluated_at }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">No saved assessments yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
