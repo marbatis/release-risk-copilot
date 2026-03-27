@@ -6,6 +6,7 @@ from collections.abc import Iterator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.config import get_settings
 
@@ -16,10 +17,15 @@ class Base(DeclarativeBase):
 
 settings = get_settings()
 _is_sqlite = settings.database_url.startswith("sqlite")
-_engine = create_engine(
-    settings.database_url,
-    connect_args={"check_same_thread": False} if _is_sqlite else {},
-)
+_is_memory = settings.database_url == "sqlite:///:memory:" or settings.database_url == "sqlite://"
+
+_engine_kwargs: dict = {}
+if _is_memory:
+    _engine_kwargs = {"connect_args": {"check_same_thread": False}, "poolclass": StaticPool}
+elif _is_sqlite:
+    _engine_kwargs = {"connect_args": {"check_same_thread": False}}
+
+_engine = create_engine(settings.database_url, **_engine_kwargs)
 SessionLocal = sessionmaker(bind=_engine, autoflush=False, autocommit=False, expire_on_commit=False)
 
 
