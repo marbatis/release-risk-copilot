@@ -1,7 +1,5 @@
 """HTTP routes for MVP assessment workflow."""
 
-from __future__ import annotations
-
 from fastapi import APIRouter, Body, HTTPException, Path, Query, Request
 from pydantic import ValidationError
 from slowapi import Limiter
