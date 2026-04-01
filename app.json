@@ -1,0 +1,15 @@
+{
+  "name": "release-risk-copilot",
+  "description": "Release Risk Copilot is a deterministic, read-only release decision support tool.",
+  "repository": "https://github.com/marbatis/release-risk-copilot",
+  "keywords": ["python","fastapi","release-engineering","risk-assessment","heroku"],
+  "env": {
+    "PYTHONUNBUFFERED": {"description": "Disable Python output buffering", "value": "1"}
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  }
+}
