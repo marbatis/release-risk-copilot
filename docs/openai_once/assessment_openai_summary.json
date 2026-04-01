@@ -1,0 +1,16 @@
+{
+  "assessment_id": "asm_d9cd4b77d03e",
+  "decision": {
+    "decision": "GO",
+    "rationale": "No hard blocks found and risk is below policy thresholds.",
+    "triggered_conditions": [
+      "policy_pass"
+    ],
+    "policy_version": "v1-portfolio",
+    "downgraded_for_coverage": false,
+    "base_decision": "GO"
+  },
+  "risk_score": null,
+  "provider_name": "mock",
+  "memo_excerpt": ""
+}
